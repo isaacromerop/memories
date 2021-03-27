@@ -1,4 +1,8 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+
+import { deletePost } from "../../../redux/actions/posts";
+
 import moment from "moment";
 import {
   Card,
@@ -12,36 +16,49 @@ import { ThumbUpAlt, Delete, Edit } from "@material-ui/icons";
 
 import useStyles from "./styles";
 
-const Post = ({ creator, likes, message, tags, title, image, date }) => {
+const Post = ({ post, setCurrentId }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+
+  const handleDelete = () => {
+    dispatch(deletePost(post._id));
+  };
   return (
     <Card className={classes.card}>
-      <CardMedia className={classes.media} image={image} title={title} />
+      <CardMedia
+        className={classes.media}
+        image={post.selectedFile}
+        title={post.title}
+      />
       <div className={classes.overlay}>
-        <Typography variant="h6">{creator}</Typography>
-        <Typography variant="body2">{moment(date).fromNow()}</Typography>
+        <Typography variant="h6">{post.creator}</Typography>
+        <Typography variant="body2">{moment(post.date).fromNow()}</Typography>
       </div>
       <div className={classes.overlay2}>
-        <Button style={{ color: "white" }} size="small">
+        <Button
+          style={{ color: "white" }}
+          size="small"
+          onClick={() => setCurrentId(post._id)}
+        >
           <Edit fontSize="default" />
         </Button>
       </div>
       <div className={classes.details}>
         <Typography variant="body2" color="textSecondary">
-          {tags.map((tag) => `#${tag}`)}
+          {post.tags.map((tag) => `#${tag}`)}
         </Typography>
       </div>
       <CardContent>
         <Typography className={classes.title} variant="h5" gutterBottom>
-          {message}
+          {post.message}
         </Typography>
       </CardContent>
       <CardActions className={classes.cardActions}>
         <Button size="small" color="primary">
           <ThumbUpAlt fontSize="small" />
-          Like {likes}
+          Like {post.likeCount}
         </Button>
-        <Button size="small" color="primary">
+        <Button size="small" color="primary" onClick={handleDelete}>
           <Delete />
           Delete
         </Button>
