@@ -3,10 +3,10 @@ import PostMessage from "../models/postMessage.js";
 
 export const getPosts = async (req, res) => {
   try {
-    const postMessages = await PostMessage.find();
+    const postMessages = await PostMessage.find().sort({ createdAt: -1 });
     res.status(200).json(postMessages);
   } catch (error) {
-    res.status(404).json({ message: error.message });
+    res.status(404).json({ message: error });
   }
 };
 
@@ -17,7 +17,7 @@ export const createPost = async (req, res) => {
     await newPost.save();
     res.status(201).json(newPost);
   } catch (error) {
-    res.status(409).json({ message: error.message });
+    res.status(409).json({ message: error });
   }
 };
 
@@ -26,10 +26,14 @@ export const updatePost = async (req, res) => {
   const post = req.body;
   if (!mongoose.Types.ObjectId.isValid(_id))
     return res.status(404).send("No post found.");
-  const updatePost = await PostMessage.findByIdAndUpdate(_id, post, {
-    new: true,
-  });
-  res.json(updatePost);
+  const updatedPost = await PostMessage.findByIdAndUpdate(
+    _id,
+    { ...post, _id },
+    {
+      new: true,
+    }
+  );
+  res.json(updatedPost);
 };
 
 export const deletePost = async (req, res) => {
@@ -37,5 +41,19 @@ export const deletePost = async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(_id))
     return res.status(404).send("No post found.");
   await PostMessage.findByIdAndDelete(_id);
-  res.json("Post deleted.");
+  res.json({ message: "Post deleted." });
+};
+
+export const likePost = async (req, res) => {
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return res.status(404).send("No post found.");
+
+  const post = await PostMessage.findById(id);
+  const updatedPost = await PostMessage.findByIdAndUpdate(
+    id,
+    { likeCount: post.likeCount + 1 },
+    { new: true }
+  );
+  res.json(updatedPost);
 };
