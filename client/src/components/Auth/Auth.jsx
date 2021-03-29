@@ -16,7 +16,7 @@ import { useDispatch } from "react-redux";
 import { AUTH } from "../../redux/types";
 
 import useStyles from "./styles";
-// import {} from "../../redux/actions/auth";
+import { signin, signup } from "../../redux/actions/auth";
 
 const formInitialData = {
   firstName: "",
@@ -29,17 +29,21 @@ const formInitialData = {
 const Auth = () => {
   const [seePass, setSeePass] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [matchPassword, setMatchPassword] = useState(false);
   const [formData, setFormData] = useState(formInitialData);
   const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
   const handleSubmit = (e) => {
     e.preventDefault();
-    // if (isSignUp) {
-    //   dispatch(signUp(formData, history));
-    // } else {
-    //   dispatch(signIn(formData, history));
-    // }
+    if (isSignUp) {
+      if (formData.password !== formData.confirmPassword) {
+        return setMatchPassword(true);
+      }
+      dispatch(signup(formData, history));
+    } else {
+      dispatch(signin(formData, history));
+    }
   };
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -58,8 +62,9 @@ const Auth = () => {
       console.log(error);
     }
   };
-  const googleFailure = () =>
-    console.log("Google Sing In was unsuccessful. Try again later.");
+  const googleFailure = () => {
+    return console.log("Google Sing In was unsuccessful. Try again later.");
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -99,6 +104,7 @@ const Auth = () => {
               handleChange={handleChange}
               type={seePass ? "text" : "password"}
               handleShowPassword={handleShowPassword}
+              error={matchPassword}
             />
             {isSignUp && (
               <Input
@@ -106,6 +112,7 @@ const Auth = () => {
                 label="Confirm Password"
                 handleChange={handleChange}
                 type="password"
+                error={matchPassword}
               />
             )}
           </Grid>
@@ -133,8 +140,8 @@ const Auth = () => {
                 Log In with Google
               </Button>
             )}
-            onSuccess={googleSuccess}
-            onFailure={googleFailure}
+            onSuccess={() => googleSuccess}
+            onFailure={() => googleFailure}
             cookiePolicy="single_host_origin"
           />
           <Grid container justify="flex-end">

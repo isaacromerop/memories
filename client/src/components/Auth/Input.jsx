@@ -11,10 +11,13 @@ const Input = ({
   type,
   handleChange,
   handleShowPassword,
+  error,
 }) => {
   return (
     <Grid item xs={12} sm={half ? 6 : 12}>
       <TextField
+        error={error}
+        helperText={error ? "Password must match." : null}
         name={name}
         label={label}
         onChange={handleChange}

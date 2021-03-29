@@ -16,10 +16,8 @@ const Navbar = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const token = user?.token;
-
     setUser(JSON.parse(localStorage.getItem("profile")));
-  }, [user, location]);
+  }, [location]);
 
   const handleLogOut = () => {
     dispatch({ type: LOGOUT });

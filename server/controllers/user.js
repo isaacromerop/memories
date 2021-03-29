@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 
 dotenv.config({ path: "variables.env" });
 
-export const signIn = async (req, res) => {
+export const signin = async (req, res) => {
   const { email, password } = req.body;
   try {
     const userExists = await User.findOne({ email });
@@ -26,7 +26,7 @@ export const signIn = async (req, res) => {
   }
 };
 
-export const signUp = async (req, res) => {
+export const signup = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
   const userExist = await User.findOne({ email });
   if (userExist) return res.status({ message: "User already exists." });
@@ -39,7 +39,7 @@ export const signUp = async (req, res) => {
       name: `${firstName} ${lastName}`,
     });
     const token = jwt.sign(
-      { email: userExist.email, id: userExist._id },
+      { email: newUser.email, id: newUser._id },
       process.env.SECRET,
       { expiresIn: "1d" }
     );
