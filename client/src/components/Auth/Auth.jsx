@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { GoogleLogin } from "react-google-login";
 import Input from "./Input";
 import {
@@ -19,6 +20,7 @@ import useStyles from "./styles";
 const Auth = () => {
   const [seePass, setSeePass] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
   const handleSubmit = (e) => {
@@ -36,6 +38,7 @@ const Auth = () => {
     const token = await res?.tokenId;
     try {
       dispatch({ type: AUTH, payload: { result, token } });
+      history.push("/");
     } catch (error) {
       console.log(error);
     }
