@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 dotenv.config({ path: "variables.env" });
 
 import postRoutes from "./routes/post.js";
+import userRoutes from "./routes/user.js";
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(express.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 
 app.use("/posts", postRoutes);
+app.use("/user", userRoutes);
 
 const CONNECTION_URL = process.env.MONGO;
 const PORT = process.env.PORT || 5000;

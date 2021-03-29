@@ -17,14 +17,14 @@ const postSchema = mongoose.Schema({
     trim: true,
   },
   tags: [String],
+  likes: {
+    type: [String],
+    default: [],
+  },
   selectedFile: {
     type: String,
     required: false,
     trim: true,
-  },
-  likeCount: {
-    type: Number,
-    default: 0,
   },
   createdAt: {
     type: Date,

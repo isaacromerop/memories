@@ -16,18 +16,33 @@ import { useDispatch } from "react-redux";
 import { AUTH } from "../../redux/types";
 
 import useStyles from "./styles";
+// import {} from "../../redux/actions/auth";
+
+const formInitialData = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
 
 const Auth = () => {
   const [seePass, setSeePass] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [formData, setFormData] = useState(formInitialData);
   const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
   const handleSubmit = (e) => {
     e.preventDefault();
+    // if (isSignUp) {
+    //   dispatch(signUp(formData, history));
+    // } else {
+    //   dispatch(signIn(formData, history));
+    // }
   };
   const handleChange = (e) => {
-    console.log(e.target.value);
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const handleShowPassword = () => {
     setSeePass(!seePass);
@@ -45,6 +60,7 @@ const Auth = () => {
   };
   const googleFailure = () =>
     console.log("Google Sing In was unsuccessful. Try again later.");
+
   return (
     <Container component="main" maxWidth="xs">
       <Paper className={classes.paper} elevation={3}>
