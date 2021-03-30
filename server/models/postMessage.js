@@ -6,6 +6,11 @@ const postSchema = mongoose.Schema({
     trim: true,
     required: true,
   },
+  name: {
+    type: String,
+    required: true,
+    trim: true,
+  },
   message: {
     type: String,
     required: true,
@@ -28,7 +33,7 @@ const postSchema = mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: new Date(),
+    default: new Date().toISOString(),
   },
 });
 
